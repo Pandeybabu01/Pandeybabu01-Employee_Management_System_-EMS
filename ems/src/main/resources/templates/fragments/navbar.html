@@ -1,0 +1,17 @@
+<nav xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" th:fragment="navbar" class="navbar">
+    <div class="navbar-brand">
+        <a th:href="@{/dashboard}">Employee Management System</a>
+    </div>
+    <div class="navbar-links">
+        <a th:href="@{/dashboard}">Dashboard</a>
+        <a th:href="@{/employees}">Employees</a>
+        <a sec:authorize="hasRole('ADMIN')" th:href="@{/users}">Manage Users</a>
+        <span class="navbar-user">
+            <span sec:authentication="name">user</span>
+            (<span sec:authorize="hasRole('ADMIN')">Admin</span><span sec:authorize="hasRole('MANAGER')">Manager</span><span sec:authorize="hasRole('EMPLOYEE')">Employee</span>)
+        </span>
+        <form th:action="@{/logout}" method="post" class="logout-form">
+            <button type="submit" class="link-button">Logout</button>
+        </form>
+    </div>
+</nav>

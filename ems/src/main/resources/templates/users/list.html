@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Users - Employee Management System</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+
+<div class="container">
+    <div class="alert alert-success" th:if="${successMessage}" th:text="${successMessage}"></div>
+    <div class="alert alert-error" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+
+    <h1>User Administration</h1>
+
+    <div class="card">
+        <h2>Add a new login account</h2>
+        <form th:action="@{/users/save}" method="post">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required minlength="6">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="role">Role</label>
+                <select id="role" name="role">
+                    <option th:each="r : ${roles}" th:value="${r}" th:text="${r}"></option>
+                </select>
+            </div>
+            <button type="submit" class="btn">Create User</button>
+        </form>
+    </div>
+
+    <div class="card" style="padding:0;">
+        <table>
+            <thead><tr><th>Username</th><th>Role</th><th>Enabled</th><th>Actions</th></tr></thead>
+            <tbody>
+            <tr th:each="user : ${users}">
+                <td th:text="${user.username}"></td>
+                <td>
+                    <span class="badge"
+                          th:classappend="${user.role.name() == 'ADMIN'} ? 'badge-admin' : (${user.role.name() == 'MANAGER'} ? 'badge-manager' : 'badge-employee')"
+                          th:text="${user.role}"></span>
+                </td>
+                <td th:text="${user.enabled} ? 'Yes' : 'No'"></td>
+                <td>
+                    <form th:action="@{/users/{id}/delete(id=${user.id})}" method="post"
+                          onsubmit="return confirm('Delete this user account?');">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

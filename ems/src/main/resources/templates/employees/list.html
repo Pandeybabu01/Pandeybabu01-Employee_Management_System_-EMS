@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Employees - Employee Management System</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+
+<div class="container">
+    <div class="alert alert-success" th:if="${successMessage}" th:text="${successMessage}"></div>
+
+    <div class="page-header">
+        <h1>Employees</h1>
+        <a sec:authorize="hasAnyRole('ADMIN','MANAGER')" class="btn" th:href="@{/employees/new}">+ Add Employee</a>
+    </div>
+
+    <form class="search-box" th:action="@{/employees}" method="get">
+        <input type="text" name="keyword" placeholder="Search by name, email, department, designation..." th:value="${keyword}">
+        <button type="submit" class="btn btn-secondary">Search</button>
+    </form>
+
+    <div class="card" style="padding:0;">
+        <table th:if="${!employees.isEmpty()}">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Department</th>
+                <th>Designation</th>
+                <th>Salary</th>
+                <th>Joined</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="employee : ${employees}">
+                <td th:text="${employee.fullName}">Name</td>
+                <td th:text="${employee.email}">email</td>
+                <td th:text="${employee.phone}">phone</td>
+                <td th:text="${employee.department}">dept</td>
+                <td th:text="${employee.designation}">role</td>
+                <td th:text="${'₹' + #numbers.formatDecimal(employee.salary, 0, 'COMMA', 2, 'POINT')}">salary</td>
+                <td th:text="${#temporals.format(employee.dateOfJoining, 'dd MMM yyyy')}">date</td>
+                <td class="actions">
+                    <a class="btn btn-secondary" th:href="@{/employees/{id}(id=${employee.id})}">View</a>
+                    <a sec:authorize="hasAnyRole('ADMIN','MANAGER')" class="btn btn-secondary" th:href="@{/employees/{id}/edit(id=${employee.id})}">Edit</a>
+                    <form sec:authorize="hasRole('ADMIN')" th:action="@{/employees/{id}/delete(id=${employee.id})}" method="post"
+                          onsubmit="return confirm('Delete this employee record? This cannot be undone.');">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="empty-state" th:if="${employees.isEmpty()}">
+            <p>No employees found.</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>
