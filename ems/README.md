@@ -96,9 +96,7 @@ On first startup, three demo accounts are seeded automatically:
 
 | Username | Password     | Role     |
 |----------|--------------|----------|
-| admin    | Admin@123    | ADMIN    |
-| manager  | Manager@123  | MANAGER  |
-| employee | Employee@123 | EMPLOYEE |
+
 
 **Change or remove these credentials before deploying anywhere real** — they exist purely to make the app usable out of the box. New accounts can also be created from **Manage Users** (admin only) once logged in.
 
