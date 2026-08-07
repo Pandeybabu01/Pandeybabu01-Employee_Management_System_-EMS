@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${employee.fullName} + ' - Employee Details'">Employee Details</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+
+<div class="container">
+    <div class="page-header">
+        <h1 th:text="${employee.fullName}">Employee Name</h1>
+        <div class="actions">
+            <a class="btn btn-secondary" th:href="@{/employees}">Back to list</a>
+            <a sec:authorize="hasAnyRole('ADMIN','MANAGER')" class="btn" th:href="@{/employees/{id}/edit(id=${employee.id})}">Edit</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <table>
+            <tr><th style="width:200px;">Email</th><td th:text="${employee.email}"></td></tr>
+            <tr><th>Phone</th><td th:text="${employee.phone}"></td></tr>
+            <tr><th>Department</th><td th:text="${employee.department}"></td></tr>
+            <tr><th>Designation</th><td th:text="${employee.designation}"></td></tr>
+            <tr><th>Salary</th><td th:text="${'₹' + #numbers.formatDecimal(employee.salary, 0, 'COMMA', 2, 'POINT')}"></td></tr>
+            <tr><th>Date of Joining</th><td th:text="${#temporals.format(employee.dateOfJoining, 'dd MMM yyyy')}"></td></tr>
+        </table>
+    </div>
+</div>
+</body>
+</html>

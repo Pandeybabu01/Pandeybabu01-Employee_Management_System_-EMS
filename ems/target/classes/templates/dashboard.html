@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - Employee Management System</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+
+<div class="container">
+    <div class="card">
+        <h1>Welcome, <span th:text="${username}">user</span> 👋</h1>
+        <p>You are signed in as <strong th:text="${role}">ROLE</strong>.</p>
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="stat-card">
+            <div class="label">Your access level</div>
+            <div class="value" style="font-size:1.2rem;" th:text="${role}">ROLE</div>
+        </div>
+        <div class="stat-card" sec:authorize="hasAnyRole('ADMIN','MANAGER','EMPLOYEE')">
+            <div class="label">Employee Records</div>
+            <a class="btn" style="margin-top:8px;" th:href="@{/employees}">View Employees</a>
+        </div>
+        <div class="stat-card" sec:authorize="hasAnyRole('ADMIN','MANAGER')">
+            <div class="label">Add a new employee</div>
+            <a class="btn" style="margin-top:8px;" th:href="@{/employees/new}">Add Employee</a>
+        </div>
+        <div class="stat-card" sec:authorize="hasRole('ADMIN')">
+            <div class="label">User Administration</div>
+            <a class="btn" style="margin-top:8px;" th:href="@{/users}">Manage Users</a>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+        <h2>Role permissions</h2>
+        <table>
+            <thead>
+            <tr><th>Action</th><th>Admin</th><th>Manager</th><th>Employee</th></tr>
+            </thead>
+            <tbody>
+            <tr><td>View employee records</td><td>✅</td><td>✅</td><td>✅</td></tr>
+            <tr><td>Add / update employee records</td><td>✅</td><td>✅</td><td>❌</td></tr>
+            <tr><td>Delete employee records</td><td>✅</td><td>❌</td><td>❌</td></tr>
+            <tr><td>Manage user accounts</td><td>✅</td><td>❌</td><td>❌</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
